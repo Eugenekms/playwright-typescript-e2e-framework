@@ -1,9 +1,16 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page, expect } from '@playwright/test';
+
+export interface ContactFormData {
+    firstName: string;
+    lastName: string;
+    email: string;
+    subject: string;
+    message: string;
+}
 
 /**
- * Page Object representing the Contact Page of the e-commerce application.
+ * Page Object representing the Contact Page.
  */
-
 export class ContactPage {
     readonly page: Page;
     readonly contactSubmit: Locator;
@@ -12,7 +19,7 @@ export class ContactPage {
     readonly contactEmail: Locator;
     readonly contactSubject: Locator;
     readonly contactMessage: Locator;
-    readonly contactSuccessAlert: Locator;
+    readonly alerts: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -23,13 +30,56 @@ export class ContactPage {
         this.contactEmail = page.getByPlaceholder('Your email *');
         this.contactSubject = page.getByTestId('subject');
         this.contactMessage = page.getByTestId('message');
-        this.contactSuccessAlert = page.getByRole('alert');
+
+        // Target all alerts on the page
+        this.alerts = page.getByRole('alert');
     }
+
     /**
-     * Selects the Subject.
-     * @param {string} subject - The Subject to choose (e.g., 'Webmaster', 'Return', 'Payments', 'Status of my order').
+     * Navigates to the contact page.
      */
-    async contactSelectSubject(subject: string) {
+    async navigate(): Promise<this> {
+        await this.page.goto('/contact');
+        return this;
+    }
+
+    /**
+     * Selects the Subject from the dropdown.
+     */
+    async contactSelectSubject(subject: string): Promise<this> {
         await this.contactSubject.selectOption(subject);
+        return this;
+    }
+
+    /**
+     * Fills out all form inputs (Fluent Interface pattern).
+     */
+    async fillContactForm(data: ContactFormData): Promise<this> {
+        await this.contactFirstName.fill(data.firstName);
+        await this.contactLastName.fill(data.lastName);
+        await this.contactEmail.fill(data.email);
+        await this.contactSelectSubject(data.subject);
+        await this.contactMessage.fill(data.message);
+        return this;
+    }
+
+    /**
+     * Submits the form and waits for the backend API response to avoid race conditions.
+     */
+    async submitFormAndWaitForResponse(apiEndpointPattern = '**/messages'): Promise<number> {
+        const [response] = await Promise.all([
+            this.page.waitForResponse(apiEndpointPattern, { timeout: 10000 }),
+            this.contactSubmit.click(),
+        ]);
+
+        return response.status();
+    }
+
+    /**
+     * Encapsulated Assertion: Checks success alert safely among multiple alerts.
+     */
+    async expectSuccessAlert(expectedText: string | RegExp): Promise<void> {
+        const successAlert = this.alerts.filter({ hasText: expectedText });
+        await expect(successAlert.first()).toBeVisible();
     }
 }
