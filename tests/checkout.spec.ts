@@ -15,7 +15,7 @@ test('check contact form', async ({ mainPage, contactPage }) => {
     await contactPage.contactMessage.fill(message);
     await contactPage.contactSubmit.click();
 
-    await expect(contactPage.contactSuccessAlert).toHaveText(
+    await expect(contactPage.alerts).toHaveText(
         'Thanks for your message! We will contact you shortly.',
     );
 });
