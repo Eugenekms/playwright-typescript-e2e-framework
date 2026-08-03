@@ -7,29 +7,32 @@ const authFile = 'playwright/.auth/user.json';
 setup('authenticate via API', async ({ request }) => {
     const response = await request.post('https://api.practicesoftwaretesting.com/users/login', {
         data: {
-            email: process.env.CUSTOMER_EMAIL,
-            password: process.env.CUSTOMER_PASSWORD,
+            email: process.env.CUSTOMER_EMAIL!,
+            password: process.env.CUSTOMER_PASSWORD!,
         },
     });
 
-    expect(response.ok()).toBeTruthy();
-    
+    expect(
+        response.ok(),
+        `Auth Setup Failed! HTTP Status: ${response.status()} ${response.statusText()}`,
+    ).toBeTruthy();
+
     const responseBody = await response.json();
-    const token = responseBody.access_token; 
+    const token = responseBody.access_token;
 
     const state = {
         cookies: [],
         origins: [
             {
-                origin: "https://practicesoftwaretesting.com",
+                origin: 'https://practicesoftwaretesting.com',
                 localStorage: [
                     {
-                        name: "auth-token",
-                        value: token
-                    }
-                ]
-            }
-        ]
+                        name: 'auth-token',
+                        value: token,
+                    },
+                ],
+            },
+        ],
     };
 
     fs.mkdirSync(path.dirname(authFile), { recursive: true });
