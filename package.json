@@ -6,8 +6,8 @@
     "scripts": {
         "prepare": "husky",
         "clean": "rimraf allure-results allure-report",
-        "test": "npm run clean && dotenvx run --quiet -- playwright test",
-        "test:ui": "npm run clean && dotenvx run --quiet -- playwright test --ui",
+        "test": "npm run clean && playwright test",
+        "test:ui": "npm run clean && playwright test --ui",
         "report": "allure serve allure-results"
     },
     "keywords": [],

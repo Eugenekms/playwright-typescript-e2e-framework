@@ -1,8 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 
-// Load .env only locally AND only if dotenvx hasn't already loaded it
-if (!process.env.CI && !process.env.DOTENV_ENV && !process.env.DOTENVX) {
+// Load .env locally only if not in CI and not already injected by external tools
+if (!process.env.CI && !process.env.DOTENV_ENV) {
     dotenv.config();
 }
 
