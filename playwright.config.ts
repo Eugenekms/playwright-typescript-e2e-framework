@@ -20,6 +20,8 @@ export default defineConfig({
     use: {
         baseURL: process.env.BASE_URL || 'https://practicesoftwaretesting.com',
         testIdAttribute: 'data-test',
+        actionTimeout: 10 * 1000, // Timeout for actions like click(), fill() (default: 0)
+        navigationTimeout: 15 * 1000, // Timeout for page.goto() (default: 0)
         trace: 'retain-on-failure',
         screenshot: 'only-on-failure',
         video: 'retain-on-failure',
@@ -33,6 +35,7 @@ export default defineConfig({
             name: 'chromium',
             use: {
                 ...devices['Desktop Chrome'],
+                viewport: { width: 1920, height: 1080 },
                 storageState: 'playwright/.auth/user.json',
             },
             dependencies: ['setup'],

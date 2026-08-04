@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page, expect } from '@playwright/test';
 
 /**
  * Page Object representing the Main Page of the e-commerce application.
@@ -13,10 +13,11 @@ export class MainPage {
     readonly cardProductInstock: Locator;
     readonly cartLink: Locator;
     readonly contactLink: Locator;
+    readonly languageBtn: Locator;
 
     constructor(page: Page) {
         this.page = page;
-        this.searchInput = page.getByPlaceholder('Search');
+        this.searchInput = page.getByTestId('search-query');
         this.searchCountResult = page.getByTestId('search-result-count');
         this.signInButton = page.getByRole('link', { name: 'Sign in' });
         this.handToolHammer = page.getByRole('checkbox', { name: 'Hammer' });
@@ -24,6 +25,7 @@ export class MainPage {
         this.cardProductInstock = page.locator('.card');
         this.cartLink = page.getByTestId('nav-cart');
         this.contactLink = page.getByTestId('nav-contact');
+        this.languageBtn = page.getByTestId('language-select');
     }
 
     /**
@@ -48,7 +50,28 @@ export class MainPage {
      */
     async choseInStock() {
         await this.cardProductInstock.first().waitFor({ state: 'visible' });
-        const availbleCard = this.cardProductInstock.filter({ hasNotText: 'Out of stock' }).first();
-        await availbleCard.getByTestId('product-name').click();
+        const availableCard = this.cardProductInstock
+            .filter({ hasNotText: 'Out of stock' })
+            .first();
+        await availableCard.getByTestId('product-name').click();
+    }
+
+    /**
+     * Opens the language selection dropdown and selects the specified language option.
+     * @param {string} langCode - Language option code/id (e.g. 'de', 'en', 'nl', 'fr').
+     */
+    async selectLanguage(langCode: string) {
+        const code = langCode.toLowerCase();
+        await this.languageBtn.click();
+        await this.page.getByTestId(`lang-${code}`).click();
+        await this.page.locator('.skeleton').first().waitFor({ state: 'detached' });
+    }
+
+    /**
+     * Asserts that the expected language label is displayed on the language button.
+     * @param {string} expectedLanguage - Language text to check (e.g., 'DE', 'EN').
+     */
+    async expectLanguageSelected(expectedLanguage: string) {
+        await expect(this.languageBtn).toContainText(expectedLanguage);
     }
 }

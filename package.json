@@ -8,7 +8,11 @@
         "clean": "rimraf allure-results allure-report",
         "test": "npm run clean && playwright test",
         "test:ui": "npm run clean && playwright test --ui",
-        "report": "allure serve allure-results"
+        "report": "allure serve allure-results",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "format": "prettier --write .",
+        "format:check": "prettier --check ."
     },
     "keywords": [],
     "author": "",
