@@ -6,6 +6,8 @@ test.describe('Localization and Language Switching', () => {
     test('check different localization', async ({ mainPage }) => {
         await test.step('Open main page', async () => {
             await mainPage.open();
+            await mainPage.expectLanguageSelected('EN');
+            await expect(mainPage.searchInput).toHaveAttribute('placeholder', 'Search');
         });
 
         await test.step('Switch to German and verify placeholder', async () => {

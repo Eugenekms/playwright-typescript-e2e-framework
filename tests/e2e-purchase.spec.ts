@@ -18,6 +18,7 @@ test('e2e purchase flow', async ({ mainPage, productPage, checkoutPage }) => {
     await checkoutPage.selectAnyCountry(shippingAddressCountry);
     await checkoutPage.postalCode.fill(zipCode);
     await checkoutPage.houseNumber.fill(houseNumber);
+    await checkoutPage.houseNumber.blur(); // To pass in CI
     await checkoutPage.proceedToCheckoutButton3.click();
 
     await checkoutPage.selectPaymentMethod('Buy Now Pay Later');
