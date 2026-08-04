@@ -64,6 +64,7 @@ export class MainPage {
         const code = langCode.toLowerCase();
         await this.languageBtn.click();
         await this.page.getByTestId(`lang-${code}`).click();
+        await this.page.locator('.skeleton').first().waitFor({ state: 'detached' });
     }
 
     /**
