@@ -50,6 +50,7 @@ test('should handle payment gateway 500 error gracefully', async ({
     await checkoutPage.selectAnyCountry('United States of America (the)');
     await checkoutPage.postalCode.fill('12345');
     await checkoutPage.houseNumber.fill('42');
+    await checkoutPage.houseNumber.blur(); // To pass in CI
     await checkoutPage.proceedToCheckoutButton3.click();
 
     await checkoutPage.selectPaymentMethod('Buy Now Pay Later');
@@ -88,6 +89,7 @@ test('e2e fake invoice flow', async ({ mainPage, productPage, checkoutPage, page
     await checkoutPage.selectAnyCountry(shippingAddressCountry);
     await checkoutPage.postalCode.fill(zipCode);
     await checkoutPage.houseNumber.fill(houseNumber);
+    await checkoutPage.houseNumber.blur(); // To pass in CI
     await checkoutPage.proceedToCheckoutButton3.click();
 
     await checkoutPage.selectPaymentMethod('Buy Now Pay Later');

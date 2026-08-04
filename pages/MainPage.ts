@@ -62,13 +62,8 @@ export class MainPage {
      */
     async selectLanguage(langCode: string) {
         const code = langCode.toLowerCase();
-        const translationResponse = this.page
-            .waitForResponse(`**/assets/i18n/${code}.json`)
-            .catch(() => null);
-
         await this.languageBtn.click();
         await this.page.getByTestId(`lang-${code}`).click();
-        await translationResponse;
     }
 
     /**
