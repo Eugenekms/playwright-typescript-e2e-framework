@@ -1,7 +1,5 @@
 import { test, expect } from '../fixtures/baseTest';
 
-test.use({ storageState: { cookies: [], origins: [] } });
-
 test.describe('Localization and Language Switching', () => {
     test('check different localization', async ({ mainPage }) => {
         await test.step('Open main page', async () => {
