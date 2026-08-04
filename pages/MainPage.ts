@@ -61,8 +61,14 @@ export class MainPage {
      * @param {string} langCode - Language option code/id (e.g. 'de', 'en', 'nl', 'fr').
      */
     async selectLanguage(langCode: string) {
+        const code = langCode.toLowerCase();
+        const translationResponse = this.page
+            .waitForResponse(`**/assets/i18n/${code}.json`)
+            .catch(() => null);
+
         await this.languageBtn.click();
-        await this.page.getByTestId(`lang-${langCode.toLowerCase()}`).click();
+        await this.page.getByTestId(`lang-${code}`).click();
+        await translationResponse;
     }
 
     /**
