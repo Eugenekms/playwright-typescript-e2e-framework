@@ -10,16 +10,16 @@ test.describe('Localization and Language Switching', () => {
             await expect(mainPage.searchInput).toHaveAttribute('placeholder', 'Search');
         });
 
-        await test.step('Switch to German and verify placeholder', async () => {
-            await mainPage.selectLanguage('de');
-            await mainPage.expectLanguageSelected('DE');
-            await expect(mainPage.searchInput).toHaveAttribute('placeholder', 'Suche');
-        });
-
         await test.step('Switch to Greek and verify placeholder', async () => {
             await mainPage.selectLanguage('el');
             await mainPage.expectLanguageSelected('EL');
             await expect(mainPage.searchInput).toHaveAttribute('placeholder', 'Αναζήτηση');
+        });
+
+        await test.step('Switch to German and verify placeholder', async () => {
+            await mainPage.selectLanguage('de');
+            await mainPage.expectLanguageSelected('DE');
+            await expect(mainPage.searchInput).toHaveAttribute('placeholder', 'Suche');
         });
 
         await test.step('Switch to English and verify placeholder', async () => {
