@@ -14,9 +14,12 @@ export class MainPage {
     readonly cartLink: Locator;
     readonly contactLink: Locator;
     readonly languageBtn: Locator;
+    readonly categoriesBtn: Locator;
+    readonly pageTitle: Locator;
 
     constructor(page: Page) {
         this.page = page;
+        this.pageTitle = page.getByTestId('page-title');
         this.searchInput = page.getByTestId('search-query');
         this.searchCountResult = page.getByTestId('search-result-count');
         this.signInButton = page.getByRole('link', { name: 'Sign in' });
@@ -26,6 +29,7 @@ export class MainPage {
         this.cartLink = page.getByTestId('nav-cart');
         this.contactLink = page.getByTestId('nav-contact');
         this.languageBtn = page.getByTestId('language-select');
+        this.categoriesBtn = page.getByTestId('nav-categories');
     }
 
     /**
@@ -73,5 +77,16 @@ export class MainPage {
      */
     async expectLanguageSelected(expectedLanguage: string) {
         await expect(this.languageBtn).toContainText(expectedLanguage);
+    }
+
+    /**
+     * Opens the categories dropdown, selects a specific category by its exact name,
+     * and waits for the page content to fully load (skeleton loader disappears).
+     * @param {string} categoryName - The exact text of the category to select (e.g., 'Hand Tools', 'Power Tools').
+     */
+    async selectCategories(categoryName: string) {
+        await this.categoriesBtn.click();
+        await this.page.getByText(categoryName, { exact: true }).click();
+        await this.page.locator('.skeleton').first().waitFor({ state: 'detached' });
     }
 }
