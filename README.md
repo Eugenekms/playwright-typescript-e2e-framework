@@ -29,6 +29,7 @@ This project leverages Playwright's **Global Authentication Setup** pattern to o
 ---
 
 ## 🏃‍♂️ How to Run Tests
+
 ### Docker Execution
 
 To run the suite inside a clean, reproducible containerized environment:
@@ -45,22 +46,26 @@ docker run --rm playwright-shop-tests
 
 ## 📊 Reporting & Debugging
 
-* **Playwright Native HTML Report**:
-  ```bash
-  npx playwright show-report
-  ```
+- **Playwright Native HTML Report**:
 
-* **Allure Report**:
-  ```bash
-  npx allure generate allure-results --clean -o allure-report
-  npx allure open allure-report
-  ```
+    ```bash
+    npx playwright show-report
+    ```
 
-* **Trace Viewer**: Traces are recorded automatically on test failure (`retain-on-failure`). Inspect a recorded trace with:
-  ```bash
-  npx playwright show-trace test-results/<test-folder>/trace.zip
-  ```
+- **Allure Report**:
+
+    ```bash
+    npx allure generate allure-results --clean -o allure-report
+    npx allure open allure-report
+    ```
+
+- **Trace Viewer**: Traces are recorded automatically on test failure (`retain-on-failure`). Inspect a recorded trace with:
+    ```bash
+    npx playwright show-trace test-results/<test-folder>/trace.zip
+    ```
+
 ---
+
 ## 📁 Project Structure
 
 ```text
