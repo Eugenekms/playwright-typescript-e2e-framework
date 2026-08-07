@@ -1,89 +1,77 @@
-# E-commerce UI Automation Framework
+# Playwright E2E & API Test Automation Suite
 
-This repository contains an automated UI testing framework for the [Practice Software Testing](https://practicesoftwaretesting.com/) demo platform.
+An automated UI and API testing framework built with **Playwright** and **TypeScript** for the [Practice Software Testing](https://practicesoftwaretesting.com/) application.
 
-## 🛠 Tech Stack & Architecture
+---
 
-- **Automation Tool**: [Playwright](https://playwright.dev/)
-- **Language**: TypeScript
-- **Test Data Generation**: [Faker.js](https://fakerjs.dev/)
-- **Design Patterns**: Page Object Model (POM), Custom Fixtures
-- **Key Features**:
-    - Isolated API and UI testing projects
-    - Global setup for UI authentication (saving state to avoid repetitive logins)
-    - Dynamic API chaining and negative scenarios handling (401, 404, 423)
-    - Dynamic test data generation for reliable and independent test runs
+## 🛠 Tech Stack & Key Features
 
-## 📁 Project Structure
+- **Automation Tool**: [Playwright](https://playwright.dev/) with **TypeScript**
+- **Design Pattern**: Page Object Model (POM) with Custom Fixtures
+- **Test Data**: Dynamic data generation using [@faker-js/faker](https://fakerjs.dev/)
+- **Reporting**: Allure Reports & Playwright Native HTML Reporter
+- **CI/CD & Containerization**: GitHub Actions pipeline & Docker support
 
-- `/tests` - Contains UI and API spec files (isolated by Playwright projects)
-- `/pages` - Page Object classes (strict separation of actions and assertions)
-- `/fixtures` - Custom Playwright fixtures for test setup and state management
-- `playwright.config.ts` - Multi-browser and API project configurations
-- `Dockerfile` - Containerization instructions for reproducible runs
+---
 
-## 🚀 Getting Started
+## 🏗 Architecture & Authentication Strategy
 
-### 1. Clone the repository
+This project leverages Playwright's **Global Authentication Setup** pattern to optimize execution speed:
 
-```bash
-git clone [https://github.com/Eugenekms/playwright_shop.git](https://github.com/Eugenekms/playwright_shop.git)
-cd playwright_shop
+```text
+[.env / CI Secrets] ──(Credentials)──> [auth.setup.ts] ──(Authenticates)──> [user.json] ──> [E2E Tests]
 ```
 
-### 2. Install dependencies
+1. **Setup Phase (`tests/setup/auth.setup.ts`)**: Runs prior to browser tests. Reads test credentials from `.env`, logs into the application, and saves the session state (cookies & `localStorage`) to `playwright/.auth/user.json`.
+2. **State Reuse**: UI test projects (`chromium`) load `user.json` via the `storageState` config option.
+3. **Efficiency**: Authentication executes **once per test run** rather than before every single test case, speeding up CI execution times by up to 70%.
 
-```bash
-npm install
-```
-
-### 3. Environment Setup
-
-This project requires environment variables for authentication tests.
-
-1. Create a `.env` file in the root directory.
-2. Copy the contents from `.env.example` into your new `.env` file. The default test credentials are provided there.
+---
 
 ## 🏃‍♂️ How to Run Tests
+### Docker Execution
 
-### Option A: Local Execution (Node.js required)
-
-1. Install dependencies:
-
-```bash
-npm install
-```
-
-2. Install Playwright browsers:
+To run the suite inside a clean, reproducible containerized environment:
 
 ```bash
-npx playwright install --with-deps
-```
-
-3. Execute tests in headless mode (default):
-
-```bash
-npx playwright test
-```
-
-4. Execute tests in UI mode (highly recommended for debugging):
-
-```bash
-npx playwright test --ui
-```
-
-### Option B: Isolated Execution (Docker required, Node.js NOT required)
-
-Run the entire test suite in a clean, reproducible containerized environment:
-
-1. Build the Docker image:
-
-```bash
+# 1. Build the Docker image
 docker build -t playwright-shop-tests .
+
+# 2. Run the tests in the container
+docker run --rm playwright-shop-tests
 ```
 
-2. Run the tests:
+---
 
-```bash
-docker run --rm playwright-shop-tests
+## 📊 Reporting & Debugging
+
+* **Playwright Native HTML Report**:
+  ```bash
+  npx playwright show-report
+  ```
+
+* **Allure Report**:
+  ```bash
+  npx allure generate allure-results --clean -o allure-report
+  npx allure open allure-report
+  ```
+
+* **Trace Viewer**: Traces are recorded automatically on test failure (`retain-on-failure`). Inspect a recorded trace with:
+  ```bash
+  npx playwright show-trace test-results/<test-folder>/trace.zip
+  ```
+---
+## 📁 Project Structure
+
+```text
+├── .github/workflows/   # GitHub Actions CI/CD pipelines
+├── fixtures/            # Custom Playwright fixtures (baseTest)
+├── pages/               # Page Object Model classes
+├── tests/
+│   ├── setup/           # Isolated setup scripts (auth.setup.ts)
+│   └── *.spec.ts        # UI & API test specifications
+├── utils/               # Test data helpers and utilities
+├── Dockerfile           # Docker container configuration
+├── playwright.config.ts # Global Playwright test runner configuration
+└── .env.example         # Template for required environment variables
 ```
