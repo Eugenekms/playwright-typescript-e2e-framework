@@ -7,6 +7,11 @@
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
+        "paths": {
+            "@fixtures/*": ["./fixtures/*"],
+            "@pages/*": ["./pages/*"],
+            "@utils/*": ["./utils/*"]
+        },
         "types": ["node"]
     }
 }

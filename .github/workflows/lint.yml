@@ -27,5 +27,7 @@ jobs:
               run: npm ci
 
             # 4. Execute the linter to check code quality
-            - name: Run ESLint
-              run: npm run lint
+            - name: Run Linter & Type Check
+              run: |
+                npm run lint
+                npm run type-check
