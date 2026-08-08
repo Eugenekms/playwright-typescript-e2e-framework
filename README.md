@@ -28,6 +28,51 @@ This project leverages Playwright's **Global Authentication Setup** pattern to o
 
 ---
 
+## 📋 Test Coverage & Strategy
+
+### 🔐 1. Authentication & Account Management
+- [x] User login with valid credentials (`auth.spec.ts`)[cite: 2]
+- [x] Global session state caching via `auth.setup.ts`[cite: 2]
+- [ ] User login negative scenarios (invalid password, unregistered email)
+- [ ] User registration flow (valid submission, mandatory field validation, duplicate email error)
+- [ ] Account profile updates (change address, update profile details)
+- [ ] User logout flow and session invalidation
+
+### 🔍 2. Catalog, Search & Filtering
+- [x] Basic text search for products (`search.spec.ts`)[cite: 2]
+- [x] Single-category filtering (`categories.spec.ts`, `search.spec.ts`)[cite: 2]
+- [ ] Multi-category checkbox filtering (combining subcategories)
+- [ ] Price slider / price range filtering
+- [ ] Product sorting (Price: Low to High / High to Low, Name: A-Z / Z-A)
+- [ ] Search zero-results state ("No products found")
+
+### 🛒 3. Cart, Product Details & Checkout
+- [x] E2E successful checkout flow (`e2e-purchase.spec.ts`)[cite: 2]
+- [x] Payment method selection and installments (`checkout.spec.ts`)[cite: 2]
+- [ ] Add item to cart from Product Details page and verify cart badge counter
+- [ ] Modify item quantity in cart or remove item from cart
+- [ ] Out-of-stock item handling (verify buy button disabled/hidden)
+- [ ] Form validation errors on checkout steps (missing address fields, invalid postal code)
+
+### ✉️ 4. Customer Contact & Support
+- [x] Valid contact form submission with attachments (`contact.spec.ts`)[cite: 2]
+- [ ] Contact form mandatory field validations (empty message, invalid email format)
+- [ ] Contact message subject dropdown verification
+
+### 🌐 5. Globalization & UI Preferences
+- [x] Basic language switching (`language.spec.ts`)[cite: 2]
+- [ ] Full UI string localization verification across main navigation upon language change
+
+### 🔌 6. API Testing Suite
+- [x] GET `/products` list response status and contract (`products-api.spec.ts`)[cite: 2]
+- [x] Intercepting and mocking product list responses (`search.spec.ts`)[cite: 2]
+- [ ] GET `/products/{id}` individual product details contract
+- [ ] POST `/users/login` API status and JWT token extraction
+- [ ] Unauthorized request handling (401 / 403 response verification)
+- [ ] Non-existent route / resource handling (404 response verification)
+
+---
+
 ## 🏃‍♂️ How to Run Tests
 
 ### Docker Execution
