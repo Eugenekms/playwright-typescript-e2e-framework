@@ -28,48 +28,32 @@ This project leverages Playwright's **Global Authentication Setup** pattern to o
 
 ---
 
-## 📋 Test Coverage & Strategy
+## 📋 Test Coverage & Pyramid Strategy
 
-### 🔐 1. Authentication & Account Management
-- [x] User login with valid credentials (`auth.spec.ts`)[cite: 2]
-- [x] Global session state caching via `auth.setup.ts`[cite: 2]
-- [ ] User login negative scenarios (invalid password, unregistered email)
-- [ ] User registration flow (valid submission, mandatory field validation, duplicate email error)
-- [ ] Account profile updates (change address, update profile details)
-- [ ] User logout flow and session invalidation
+To balance execution speed, reliability, and maintenance, this project follows the **Testing Pyramid**: critical happy paths run end-to-end in the browser, while edge cases, negative validations, and data contracts are tested at the API level.
 
-### 🔍 2. Catalog, Search & Filtering
-- [x] Basic text search for products (`search.spec.ts`)[cite: 2]
-- [x] Single-category filtering (`categories.spec.ts`, `search.spec.ts`)[cite: 2]
-- [ ] Multi-category checkbox filtering (combining subcategories)
-- [ ] Price slider / price range filtering
-- [ ] Product sorting (Price: Low to High / High to Low, Name: A-Z / Z-A)
-- [ ] Search zero-results state ("No products found")
+### 🌐 Tier 1: E2E Browser Tests (Critical User Journeys)
+Focuses exclusively on essential user paths and core interactive UI components.
+- [x] **Auth**: Successful user login & session creation (`auth.spec.ts`, `auth.setup.ts`)[cite: 2]
+- [x] **Catalog**: Basic product search & single-category filtering (`search.spec.ts`, `categories.spec.ts`)[cite: 2]
+- [x] **Checkout**: End-to-end purchasing flow with payment selection (`e2e-purchase.spec.ts`, `checkout.spec.ts`)[cite: 2]
+- [x] **Support**: Valid contact form submission with attachments (`contact.spec.ts`)[cite: 2]
+- [ ] **Cart**: Modifying item quantities and removing items directly from the cart
+- [ ] **Registration**: New user sign-up journey and immediate post-login redirection
 
-### 🛒 3. Cart, Product Details & Checkout
-- [x] E2E successful checkout flow (`e2e-purchase.spec.ts`)[cite: 2]
-- [x] Payment method selection and installments (`checkout.spec.ts`)[cite: 2]
-- [ ] Add item to cart from Product Details page and verify cart badge counter
-- [ ] Modify item quantity in cart or remove item from cart
-- [ ] Out-of-stock item handling (verify buy button disabled/hidden)
-- [ ] Form validation errors on checkout steps (missing address fields, invalid postal code)
+### ⚡ Tier 2: API & Integration Tests (Fast Validation & Edge Cases)
+Covers negative scenarios, authorization boundaries, and form validation rules faster and cheaper than UI automation.
+- [x] **Products API**: GET `/products` status and contract checks (`products-api.spec.ts`)[cite: 2]
+- [ ] **Auth API**: POST `/users/login` negative scenarios (invalid passwords, unregistered emails, 401 status)
+- [ ] **Cart API**: POST/DELETE `/carts` operations to prepare cart state programmatically
+- [ ] **Form Validation API**: POST `/messages` payload checks (empty fields, bad email format, 422 status)
+- [ ] **Error Handling**: Non-existent resource behavior (404 Not Found)
 
-### ✉️ 4. Customer Contact & Support
-- [x] Valid contact form submission with attachments (`contact.spec.ts`)[cite: 2]
-- [ ] Contact form mandatory field validations (empty message, invalid email format)
-- [ ] Contact message subject dropdown verification
-
-### 🌐 5. Globalization & UI Preferences
-- [x] Basic language switching (`language.spec.ts`)[cite: 2]
-- [ ] Full UI string localization verification across main navigation upon language change
-
-### 🔌 6. API Testing Suite
-- [x] GET `/products` list response status and contract (`products-api.spec.ts`)[cite: 2]
-- [x] Intercepting and mocking product list responses (`search.spec.ts`)[cite: 2]
-- [ ] GET `/products/{id}` individual product details contract
-- [ ] POST `/users/login` API status and JWT token extraction
-- [ ] Unauthorized request handling (401 / 403 response verification)
-- [ ] Non-existent route / resource handling (404 response verification)
+### 🎭 Tier 3: UI Mocking Tests (Isolated Frontend Logic)
+Uses `page.route()` to test complex UI states without depending on real backend data or side effects.
+- [x] **Search Mocking**: Intercepting product search API responses (`search.spec.ts`)[cite: 2]
+- [ ] **Empty States**: Simulating zero search results ("No products found")
+- [ ] **Inventory States**: Mocking out-of-stock API responses to verify disabled "Add to Cart" buttons
 
 ---
 
