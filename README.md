@@ -2,6 +2,8 @@
 
 An automated UI and API testing framework built with **Playwright** and **TypeScript** for the [Practice Software Testing](https://practicesoftwaretesting.com/) application.
 
+[📊 View Allure Test Report](https://eugenekms.github.io/playwright-typescript-e2e-framework/)
+
 ---
 
 ## 🛠 Tech Stack & Key Features
