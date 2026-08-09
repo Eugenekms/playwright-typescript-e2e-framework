@@ -1,15 +1,15 @@
 name: Playwright Tests & Allure Report
 
-# Trigger the workflow on push or pull request events for the master branch
 on:
     push:
-        branches: ['master']
+        branches: ['**']
     pull_request:
         branches: ['master']
 
-# Grant write permissions to the GitHub token (required to publish the site to gh-pages)
 permissions:
-    contents: write
+    contents: write # Required for peaceiris/actions-gh-pages to push to the gh-pages branch
+    pages: write
+    id-token: write
 
 jobs:
     test-and-report:
@@ -22,7 +22,8 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: '24'
+                  node-version: '20'
+                  cache: 'npm'
 
             - name: Install dependencies
               run: npm ci
@@ -32,7 +33,7 @@ jobs:
 
             - name: Run Playwright tests
               run: npm run test
-              continue-on-error: true # Continue generating the report even if some tests fail
+              continue-on-error: true # Continue generating the report even if tests fail
 
             - name: Generate Allure Report
               run: npx allure generate allure-results -o allure-report --clean
