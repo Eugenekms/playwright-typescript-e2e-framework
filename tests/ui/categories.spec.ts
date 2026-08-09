@@ -1,4 +1,4 @@
-import { test, expect } from '../fixtures/baseTest';
+import { test, expect } from '@fixtures/baseTest';
 
 test.describe('Categories Switching', () => {
     test('Verify category switching', async ({ mainPage }) => {
