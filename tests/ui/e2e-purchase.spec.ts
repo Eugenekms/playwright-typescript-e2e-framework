@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { test, expect } from '../fixtures/baseTest';
+import { test, expect } from '@fixtures/baseTest';
 
 test.describe('E2E Checkout & Purchase Suite', () => {
     test('Verify successful purchase flow with "Buy Now Pay Later"', async ({

@@ -1,5 +1,5 @@
-import { test, expect } from '../fixtures/baseTest';
-import { createContactData } from '../utils/testData';
+import { test, expect } from '@fixtures/baseTest';
+import { createContactData } from '@utils/testData';
 
 test.describe('Contact Form E2E Tests', () => {
     test.beforeEach(async ({ contactPage }) => {

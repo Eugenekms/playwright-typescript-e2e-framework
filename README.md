@@ -69,14 +69,15 @@ docker run --rm playwright-shop-tests
 ## 📁 Project Structure
 
 ```text
-├── .github/workflows/   # GitHub Actions CI/CD pipelines
-├── fixtures/            # Custom Playwright fixtures (baseTest)
+├── .github/workflows/   # CI/CD automation pipelines
+├── fixtures/            # Custom Playwright test fixtures (baseTest.ts)
 ├── pages/               # Page Object Model classes
 ├── tests/
-│   ├── setup/           # Isolated setup scripts (auth.setup.ts)
-│   └── *.spec.ts        # UI & API test specifications
-├── utils/               # Test data helpers and utilities
+│   ├── api/             # API contract and integration spec files
+│   ├── setup/           # Isolated authentication setup scripts
+│   └── ui/              # Browser E2E spec files
+├── utils/               # Helper methods and test data generators
 ├── Dockerfile           # Docker container configuration
-├── playwright.config.ts # Global Playwright test runner configuration
-└── .env.example         # Template for required environment variables
+├── playwright.config.ts # Playwright global configuration
+└── .env.example         # Template for environment variables
 ```

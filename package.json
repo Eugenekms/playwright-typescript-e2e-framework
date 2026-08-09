@@ -10,6 +10,7 @@
         "test:ui": "npm run clean && playwright test --ui",
         "report": "allure serve allure-results",
         "lint": "eslint .",
+        "type-check": "tsc --noEmit",
         "lint:fix": "eslint . --fix",
         "format": "prettier --write .",
         "format:check": "prettier --check ."

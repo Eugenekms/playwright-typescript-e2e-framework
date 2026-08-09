@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { test, expect } from '../fixtures/baseTest';
+import { test, expect } from '@fixtures/baseTest';
 
 test('check contact form', async ({ mainPage, contactPage }) => {
     const firstName = faker.person.firstName();
