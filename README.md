@@ -33,7 +33,9 @@ This project leverages Playwright's **Global Authentication Setup** pattern to o
 To balance execution speed, reliability, and maintenance, this project follows the **Testing Pyramid**: critical happy paths run end-to-end in the browser, while edge cases, negative validations, and data contracts are tested at the API level.
 
 ### 🌐 Tier 1: E2E Browser Tests (Critical User Journeys)
+
 Focuses exclusively on essential user paths and core interactive UI components.
+
 - [x] **Auth**: Successful user login & session creation (`auth.spec.ts`, `auth.setup.ts`)[cite: 2]
 - [x] **Catalog**: Basic product search & single-category filtering (`search.spec.ts`, `categories.spec.ts`)[cite: 2]
 - [x] **Checkout**: End-to-end purchasing flow with payment selection (`e2e-purchase.spec.ts`, `checkout.spec.ts`)[cite: 2]
@@ -42,7 +44,9 @@ Focuses exclusively on essential user paths and core interactive UI components.
 - [ ] **Registration**: New user sign-up journey and immediate post-login redirection
 
 ### ⚡ Tier 2: API & Integration Tests (Fast Validation & Edge Cases)
+
 Covers negative scenarios, authorization boundaries, and form validation rules faster and cheaper than UI automation.
+
 - [x] **Products API**: GET `/products` status and contract checks (`products-api.spec.ts`)[cite: 2]
 - [ ] **Auth API**: POST `/users/login` negative scenarios (invalid passwords, unregistered emails, 401 status)
 - [ ] **Cart API**: POST/DELETE `/carts` operations to prepare cart state programmatically
@@ -50,7 +54,9 @@ Covers negative scenarios, authorization boundaries, and form validation rules f
 - [ ] **Error Handling**: Non-existent resource behavior (404 Not Found)
 
 ### 🎭 Tier 3: UI Mocking Tests (Isolated Frontend Logic)
+
 Uses `page.route()` to test complex UI states without depending on real backend data or side effects.
+
 - [x] **Search Mocking**: Intercepting product search API responses (`search.spec.ts`)[cite: 2]
 - [ ] **Empty States**: Simulating zero search results ("No products found")
 - [ ] **Inventory States**: Mocking out-of-stock API responses to verify disabled "Add to Cart" buttons
