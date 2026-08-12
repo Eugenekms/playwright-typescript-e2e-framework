@@ -40,7 +40,7 @@ Focuses exclusively on essential user paths and core interactive UI components.
 - [x] **Catalog**: Basic product search & single-category filtering (`search.spec.ts`, `categories.spec.ts`)[cite: 2]
 - [x] **Checkout**: End-to-end purchasing flow with payment selection (`e2e-purchase.spec.ts`, `checkout.spec.ts`)[cite: 2]
 - [x] **Support**: Valid contact form submission with attachments (`contact.spec.ts`)[cite: 2]
-- [ ] **Cart**: Modifying item quantities and removing items directly from the cart
+- [x] **Cart**: Modifying item quantities and removing items directly from the cart
 - [ ] **Registration**: New user sign-up journey and immediate post-login redirection
 
 ### ⚡ Tier 2: API & Integration Tests (Fast Validation & Edge Cases)
