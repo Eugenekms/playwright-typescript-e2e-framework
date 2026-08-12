@@ -30,7 +30,6 @@ test.describe('E2E Checkout & Purchase Suite', () => {
             await checkoutPage.houseNumber.fill(houseNumber);
             await expect(checkoutPage.houseNumber).toHaveValue(houseNumber);
 
-            await checkoutPage.houseNumber.blur(); // Pass CI form validation
             await checkoutPage.proceedToCheckoutButton3.click();
         });
 
@@ -72,6 +71,7 @@ test.describe('E2E Checkout & Purchase Suite', () => {
         await test.step('Fill and validate shipping address details', async () => {
             await checkoutPage.selectAnyCountry('United States of America (the)');
 
+            await checkoutPage.postalCode.click();
             await checkoutPage.postalCode.fill('12345');
             await expect(checkoutPage.postalCode).toHaveValue('12345');
 
