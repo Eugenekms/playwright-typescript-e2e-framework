@@ -1,15 +1,20 @@
-name: Playwright Tests & Allure Report
+name: 🚀 Playwright Tests & Allure Report
 
 on:
     push:
-        branches: ['**']
+        branches: ['*']
     pull_request:
-        branches: ['master']
+        branches: ['master', 'main']
+    workflow_dispatch:
 
 permissions:
-    contents: write # Required for peaceiris/actions-gh-pages to push to the gh-pages branch
+    contents: read
     pages: write
     id-token: write
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
 
 jobs:
     test-and-report:
@@ -32,15 +37,29 @@ jobs:
               run: npx playwright install --with-deps
 
             - name: Run Playwright tests
+              env:
+                  BASE_URL: ${{ secrets.BASE_URL }}
+                  ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+                  ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
               run: npm run test
-              continue-on-error: true # Continue generating the report even if tests fail
+              continue-on-error: true
 
             - name: Generate Allure Report
               run: npx allure generate allure-results -o allure-report --clean
 
-            - name: Deploy to GitHub Pages
-              # Push the generated HTML report folder to the gh-pages branch
-              uses: peaceiris/actions-gh-pages@v4
+            - name: Upload Pages artifact
+              uses: actions/upload-pages-artifact@v3
               with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  publish_dir: ./allure-report
+                  path: ./allure-report
+
+    deploy:
+        needs: test-and-report
+        runs-on: ubuntu-latest
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+
+        steps:
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4
