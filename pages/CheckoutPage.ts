@@ -18,6 +18,11 @@ export class CheckoutPage {
     readonly paymentSuccessMessage: Locator;
     readonly confirmOrder: Locator;
     readonly paymentErrorMessage: Locator;
+    readonly productPrice: Locator;
+    readonly productQuantity: Locator;
+    readonly linePrice: Locator;
+    readonly deleteBtn: Locator;
+    readonly emptyCartMessage: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -34,6 +39,11 @@ export class CheckoutPage {
         this.paymentSuccessMessage = page.getByTestId('payment-success-message');
         this.confirmOrder = page.locator('#order-confirmation');
         this.paymentErrorMessage = page.getByTestId('payment-error-message');
+        this.productPrice = page.getByTestId('product-price');
+        this.productQuantity = page.getByTestId('product-quantity');
+        this.linePrice = page.getByTestId('line-price');
+        this.deleteBtn = page.locator('.btn-danger');
+        this.emptyCartMessage = page.getByText('The cart is empty. Nothing to display.');
     }
 
     /**
