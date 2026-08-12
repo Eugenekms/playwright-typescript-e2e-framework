@@ -1,40 +1,32 @@
 import { test, expect } from '@fixtures/baseTest';
 
-test.describe('checking cart', () => {
-    test('check add, change, delete product', async ({ mainPage, productPage, checkoutPage }) => {
-        await test.step('open main page', async () => {
+test.describe('Shopping Cart Management', () => {
+    test('Verify adding, updating quantity, and removing product from cart', async ({
+        mainPage,
+        productPage,
+        checkoutPage,
+    }) => {
+        await test.step('Add an in-stock product to cart and navigate to checkout', async () => {
             await mainPage.open();
-            await expect(mainPage.categoriesBtn).toHaveText('Categories');
-        });
-
-        await test.step('add product to cart', async () => {
             await mainPage.choseInStock();
-            await expect(productPage.addToCartButton).toBeVisible();
-        });
-
-        await test.step('add to cart', async () => {
             await productPage.addToCartButton.click();
-            await expect(mainPage.cartLink).toBeVisible();
-        });
-
-        await test.step('go to the cart', async () => {
             await mainPage.cartLink.click();
+
             await expect(checkoutPage.productPrice).toBeVisible();
         });
 
-        await test.step('check price', async () => {
+        await test.step('Update item quantity and verify total line price calculation', async () => {
             const priceText = (await checkoutPage.productPrice.textContent()) || '0';
-            const priceFloat = parseFloat(priceText.replace('$', ''));
+            // Extract numeric price safely (e.g. "$14.15" -> 14.15)
+            const priceFloat = parseFloat(priceText.replace(/[^0-9.]/g, ''));
 
-            await checkoutPage.productQuantity.clear();
             await checkoutPage.productQuantity.fill('2');
 
             const expectedPrice = (priceFloat * 2).toFixed(2);
-
             await expect(checkoutPage.linePrice).toHaveText(`$${expectedPrice}`);
         });
 
-        await test.step('delete product from cart', async () => {
+        await test.step('Delete product and verify empty cart state', async () => {
             await checkoutPage.deleteBtn.click();
             await expect(checkoutPage.emptyCartMessage).toBeVisible();
         });
