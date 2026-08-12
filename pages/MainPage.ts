@@ -86,7 +86,6 @@ export class MainPage {
      */
     async selectCategories(categoryName: string) {
         await this.categoriesBtn.click();
-        await this.page.getByText(categoryName, { exact: true }).click();
-        await this.page.locator('.skeleton').first().waitFor({ state: 'detached' });
+        await this.page.locator('.dropdown-menu').getByText(categoryName, { exact: true }).click();
     }
 }

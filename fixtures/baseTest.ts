@@ -1,43 +1,34 @@
-import { test as base } from '@playwright/test';
-import { MainPage } from '../pages/MainPage';
-import { LoginPage } from '../pages/LoginPage';
-import { CheckoutPage } from '../pages/CheckoutPage';
-import { ProductPage } from '../pages/ProductPage';
-import { ContactPage } from '../pages/ContactPage';
+import { test as base, expect } from '@playwright/test';
+import { LoginPage } from '@pages/LoginPage';
+import { MainPage } from '@pages/MainPage';
+import { CheckoutPage } from '@pages/CheckoutPage';
+import { ContactPage } from '@pages/ContactPage';
+import { ProductPage } from '@pages/ProductPage';
 
 type MyFixtures = {
-    mainPage: MainPage;
     loginPage: LoginPage;
+    mainPage: MainPage;
     checkoutPage: CheckoutPage;
-    productPage: ProductPage;
     contactPage: ContactPage;
+    productPage: ProductPage;
 };
 
 export const test = base.extend<MyFixtures>({
-    mainPage: async ({ page }, use) => {
-        const mainPage = new MainPage(page);
-        await use(mainPage);
-    },
-
     loginPage: async ({ page }, use) => {
-        const loginPage = new LoginPage(page);
-        await use(loginPage);
+        await use(new LoginPage(page));
     },
-
+    mainPage: async ({ page }, use) => {
+        await use(new MainPage(page));
+    },
     checkoutPage: async ({ page }, use) => {
-        const checkoutPage = new CheckoutPage(page);
-        await use(checkoutPage);
+        await use(new CheckoutPage(page));
     },
-
-    productPage: async ({ page }, use) => {
-        const productPage = new ProductPage(page);
-        await use(productPage);
-    },
-
     contactPage: async ({ page }, use) => {
-        const contactPage = new ContactPage(page);
-        await use(contactPage);
+        await use(new ContactPage(page));
+    },
+    productPage: async ({ page }, use) => {
+        await use(new ProductPage(page));
     },
 });
 
-export { expect } from '@playwright/test';
+export { expect };

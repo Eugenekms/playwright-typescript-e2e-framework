@@ -46,7 +46,7 @@ test.describe('E2E Checkout & Purchase Suite', () => {
 
         await test.step('Finalize order and verify invoice generation message', async () => {
             await checkoutPage.finishButton.click();
-
+            await checkoutPage.confirmOrder.waitFor({ state: 'visible' });
             await expect(checkoutPage.confirmOrder).toContainText(
                 'Thanks for your order! Your invoice number is',
             );

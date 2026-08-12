@@ -25,9 +25,9 @@ export class ContactPage {
         this.page = page;
 
         this.contactSubmit = page.getByTestId('contact-submit');
-        this.contactFirstName = page.getByPlaceholder('Your first name *');
-        this.contactLastName = page.getByPlaceholder('Your last name *');
-        this.contactEmail = page.getByPlaceholder('Your email *');
+        this.contactFirstName = page.getByTestId('first-name');
+        this.contactLastName = page.getByTestId('last-name');
+        this.contactEmail = page.getByTestId('email');
         this.contactSubject = page.getByTestId('subject');
         this.contactMessage = page.getByTestId('message');
 
@@ -56,10 +56,18 @@ export class ContactPage {
      */
     async fillContactForm(data: ContactFormData): Promise<this> {
         await this.contactFirstName.fill(data.firstName);
+        await expect(this.contactFirstName).toHaveValue(data.firstName);
+
         await this.contactLastName.fill(data.lastName);
+        await expect(this.contactLastName).toHaveValue(data.lastName);
+
         await this.contactEmail.fill(data.email);
+        await expect(this.contactEmail).toHaveValue(data.email);
+
         await this.contactSelectSubject(data.subject);
         await this.contactMessage.fill(data.message);
+        await expect(this.contactMessage).toHaveValue(data.message);
+
         return this;
     }
 
