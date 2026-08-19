@@ -1,0 +1,59 @@
+name: Allure Report
+
+on:
+    workflow_run:
+        workflows: ['Playwright Tests']
+        types: [completed]
+    workflow_dispatch:
+        inputs:
+            run_id:
+                description: 'Playwright Run ID (optional)'
+                required: false
+                type: string
+
+permissions:
+    contents: read
+    pages: write
+    id-token: write
+
+jobs:
+    generate-and-deploy:
+        name: Generate & Deploy Report
+        # Triggers on both success AND failure so report generates when tests fail
+        if: >
+            github.event_name == 'workflow_dispatch' ||
+            github.event.workflow_run.conclusion == 'success' ||
+            github.event.workflow_run.conclusion == 'failure'
+        runs-on: ubuntu-latest
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+
+            - name: Download Allure Results
+              uses: actions/download-artifact@v4
+              with:
+                  name: allure-results
+                  path: allure-results
+                  run-id: ${{ github.event.workflow_run.id || inputs.run_id }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Generate Allure Report
+              run: npx allure-commandline generate allure-results -o allure-report --clean
+
+            - name: Upload Pages artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: ./allure-report
+
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4
