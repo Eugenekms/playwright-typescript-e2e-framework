@@ -1,24 +1,33 @@
-name: 🚀 Playwright Tests & Allure Report
+name: Allure Report
 
 on:
-    push:
-        branches: ['*']
-    pull_request:
-        branches: ['master', 'main']
+    workflow_run:
+        workflows: ['Playwright Tests']
+        types: [completed]
     workflow_dispatch:
+        inputs:
+            run_id:
+                description: 'Playwright Run ID (optional)'
+                required: false
+                type: string
 
 permissions:
     contents: read
     pages: write
     id-token: write
 
-concurrency:
-    group: ${{ github.workflow }}-${{ github.ref }}
-    cancel-in-progress: true
-
 jobs:
-    test-and-report:
+    generate-and-deploy:
+        name: Generate & Deploy Report
+        # Triggers on both success AND failure so report generates when tests fail
+        if: >
+            github.event_name == 'workflow_dispatch' ||
+            github.event.workflow_run.conclusion == 'success' ||
+            github.event.workflow_run.conclusion == 'failure'
         runs-on: ubuntu-latest
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
 
         steps:
             - name: Checkout repository
@@ -28,39 +37,23 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: '20'
-                  cache: 'npm'
 
-            - name: Install dependencies
-              run: npm ci
-
-            - name: Install Playwright Browsers
-              run: npx playwright install --with-deps
-
-            - name: Run Playwright tests
-              env:
-                  BASE_URL: ${{ secrets.BASE_URL }}
-                  ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
-                  ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-              run: npm run test
-              continue-on-error: true
+            - name: Download Allure Results
+              uses: actions/download-artifact@v4
+              with:
+                  name: allure-results
+                  path: allure-results
+                  run-id: ${{ github.event.workflow_run.id || inputs.run_id }}
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Generate Allure Report
-              run: npx allure generate allure-results -o allure-report --clean
+              run: npx allure-commandline generate allure-results -o allure-report --clean
 
             - name: Upload Pages artifact
               uses: actions/upload-pages-artifact@v3
               with:
                   path: ./allure-report
 
-    deploy:
-        needs: test-and-report
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-        runs-on: ubuntu-latest
-        environment:
-            name: github-pages
-            url: ${{ steps.deployment.outputs.page_url }}
-
-        steps:
             - name: Deploy to GitHub Pages
               id: deployment
               uses: actions/deploy-pages@v4
