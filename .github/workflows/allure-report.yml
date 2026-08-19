@@ -18,6 +18,7 @@ concurrency:
 
 jobs:
     test-and-report:
+        name: Run Playwright Tests & Generate Report
         runs-on: ubuntu-latest
 
         steps:
