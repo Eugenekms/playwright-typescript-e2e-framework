@@ -1,14 +1,14 @@
-name: 🚀 Playwright Tests & Allure Report
+name: Playwright Tests & Allure Report
 
 on:
     push:
         branches: ['*']
     pull_request:
-        branches: ['master', 'main']
+        branches: ['master']
     workflow_dispatch:
 
 permissions:
-    contents: read
+    contents: write
     pages: write
     id-token: write
 
@@ -19,6 +19,9 @@ concurrency:
 jobs:
     test-and-report:
         runs-on: ubuntu-latest
+        # Uses pre-installed browsers and OS dependencies to bypass slow apt downloads
+        container:
+            image: mcr.microsoft.com/playwright:v1.50.0-noble
 
         steps:
             - name: Checkout repository
@@ -33,12 +36,12 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
-            - name: Install Playwright Browsers
-              run: npx playwright install --with-deps
-
             - name: Run Playwright tests
               env:
+                  CI: true
                   BASE_URL: ${{ secrets.BASE_URL }}
+                  CUSTOMER_EMAIL: ${{ secrets.CUSTOMER_EMAIL }}
+                  CUSTOMER_PASSWORD: ${{ secrets.CUSTOMER_PASSWORD }}
                   ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
                   ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
               run: npm run test
