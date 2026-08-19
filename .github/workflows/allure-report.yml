@@ -19,9 +19,6 @@ concurrency:
 jobs:
     test-and-report:
         runs-on: ubuntu-latest
-        # Uses pre-installed browsers and OS dependencies to bypass slow apt downloads
-        container:
-            image: mcr.microsoft.com/playwright:v1.50.0-noble
 
         steps:
             - name: Checkout repository
@@ -35,6 +32,9 @@ jobs:
 
             - name: Install dependencies
               run: npm ci
+
+            - name: Install Playwright Chromium Only
+              run: npx playwright install chromium --with-deps
 
             - name: Run Playwright tests
               env:
